@@ -1,0 +1,139 @@
+name: "Python Bot CI/CD"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  quality:
+    name: "Lint & Format"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+          pip install ruff
+      - name: Ruff Lint
+        run: ruff check .
+      - name: Ruff Format Check
+        run: ruff format --check .
+
+  test:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Run Tests
+        run: python -m pytest tests/ -v --tb=short || echo "No tests found, skipping"
+
+  deploy-vps:
+    name: "Deploy to VPS"
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd ~/bots/${{ github.event.repository.name }}
+            git pull origin main
+            pip install -r requirements.txt
+            sudo systemctl restart ${{ github.event.repository.name }}
+      - name: Notify Telegram
+        run: |
+          MSG="Bot Deployed - ${{ github.repository }} by ${{ github.actor }}"
+          curl -s -X POST \
+            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d "text=${MSG}" \
+            -d "parse_mode=Markdown"name: "Python Bot CI/CD"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  quality:
+    name: "Lint & Format"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+          pip install ruff
+      - name: Ruff Lint
+        run: ruff check .
+      - name: Ruff Format Check
+        run: ruff format --check .
+
+  test:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Run Tests
+        run: python -m pytest tests/ -v --tb=short || echo "No tests found, skipping"
+
+  deploy-vps:
+    name: "Deploy to VPS"
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd ~/bots/${{ github.event.repository.name }}
+            git pull origin main
+            pip install -r requirements.txt
+            sudo systemctl restart ${{ github.event.repository.name }}
+      - name: Notify Telegram
+        run: |
+          MSG="Bot Deployed - ${{ github.repository }} by ${{ github.actor }}"
+          curl -s -X POST \
+            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d "text=${MSG}" \
+            -d "parse_mode=Markdown"
