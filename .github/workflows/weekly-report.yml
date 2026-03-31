@@ -1,0 +1,74 @@
+name: "Weekly Project Report"
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday at 9:00 UTC
+  workflow_dispatch:       # Manual trigger
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect project data
+        id: data
+        run: |
+          REPO=${{ github.repository }}
+          
+          # Count open/closed issues
+          OPEN_ISSUES=$(gh api repos/$REPO/issues --jq 'length' -q 'state=open&per_page=100' 2>/dev/null || echo "0")
+          CLOSED_7D=$(gh api "repos/$REPO/issues?state=closed&since=$(date -d '7 days ago' -u +%Y-%m-%dT%H:%M:%SZ)&per_page=100" --jq 'length' 2>/dev/null || echo "0")
+          
+          # Recent commits (7 days)
+          COMMITS_7D=$(gh api "repos/$REPO/commits?since=$(date -d '7 days ago' -u +%Y-%m-%dT%H:%M:%SZ)&per_page=100" --jq 'length' 2>/dev/null || echo "0")
+          
+          # Open PRs
+          OPEN_PRS=$(gh api repos/$REPO/pulls --jq 'length' -q 'state=open&per_page=100' 2>/dev/null || echo "0")
+          
+          # Last deploy (latest release or tag)
+          LAST_DEPLOY=$(gh api repos/$REPO/releases/latest --jq '.published_at // "N/A"' 2>/dev/null || echo "N/A")
+          
+          # List open issues titles
+          ISSUE_LIST=$(gh api repos/$REPO/issues --jq '.[0:5] | .[] | "• " + .title' -q 'state=open&per_page=5' 2>/dev/null || echo "No issues")
+          
+          echo "OPEN_ISSUES=$OPEN_ISSUES" >> $GITHUB_OUTPUT
+          echo "CLOSED_7D=$CLOSED_7D" >> $GITHUB_OUTPUT
+          echo "COMMITS_7D=$COMMITS_7D" >> $GITHUB_OUTPUT
+          echo "OPEN_PRS=$OPEN_PRS" >> $GITHUB_OUTPUT
+          echo "LAST_DEPLOY=$LAST_DEPLOY" >> $GITHUB_OUTPUT
+          
+          # Save issue list to file (multiline)
+          echo "$ISSUE_LIST" > /tmp/issues.txt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Send Telegram report
+        run: |
+          REPO=${{ github.repository }}
+          DATE=$(date -u +"%d.%m.%Y")
+          ISSUES=$(cat /tmp/issues.txt)
+          
+          MESSAGE="📊 Weekly Report — $DATE
+          
+          📦 Repo: $REPO
+          
+          📋 Open issues: ${{ steps.data.outputs.OPEN_ISSUES }}
+          ✅ Closed (7d): ${{ steps.data.outputs.CLOSED_7D }}
+          🔀 Open PRs: ${{ steps.data.outputs.OPEN_PRS }}
+          📝 Commits (7d): ${{ steps.data.outputs.COMMITS_7D }}
+          🚀 Last release: ${{ steps.data.outputs.LAST_DEPLOY }}
+          
+          📌 Top issues:
+          $ISSUES"
+          
+          curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+            -d chat_id="$TELEGRAM_CHAT_ID" \
+            -d text="$MESSAGE" \
+            -d parse_mode="Markdown" || \
+          curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+            -d chat_id="$TELEGRAM_CHAT_ID" \
+            -d text="$MESSAGE"
