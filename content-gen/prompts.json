@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "updated": "2026-04-01",
+    "description": "AI Agency prompt library for content generation"
+  },
+  "categories": {
+    "saas": {
+      "name": "SaaS Solutions",
+      "prompts": {
+        "landing_hero_image": {
+          "description": "Hero section image for SaaS landing page",
+          "model": "flux-1.1-pro",
+          "prompt": "Clean modern SaaS dashboard interface floating in 3D space, glass morphism design, gradient purple-blue background, data visualization charts, minimalist UI elements, professional tech aesthetic, 8k quality, studio lighting",
+          "negative_prompt": "text, watermark, blurry, low quality, distorted",
+          "aspect_ratio": "16:9",
+          "tags": [
+            "landing",
+            "hero",
+            "dashboard"
+          ]
+        },
+        "feature_icons": {
+          "description": "Feature section icons for SaaS product",
+          "model": "flux-1.1-pro",
+          "prompt": "Minimalist 3D icon of {feature_name}, glass morphism style, soft gradient {color} background, clean edges, professional SaaS aesthetic, centered composition, studio lighting",
+          "variables": {
+            "feature_name": "analytics",
+            "color": "blue-purple"
+          },
+          "aspect_ratio": "1:1",
+          "tags": [
+            "icons",
+            "features"
+          ]
+        },
+        "onboarding_illustration": {
+          "description": "Onboarding flow illustrations",
+          "model": "flux-1.1-pro",
+          "prompt": "Flat illustration of {step_description}, modern tech style, limited color palette of {brand_colors}, clean lines, friendly and approachable, white background",
+          "variables": {
+            "step_description": "user connecting integrations",
+            "brand_colors": "blue, white, gray"
+          },
+          "aspect_ratio": "4:3",
+          "tags": [
+            "onboarding",
+            "illustration"
+          ]
+        },
+        "social_media_post": {
+          "description": "Social media content for SaaS promotion",
+          "model": "flux-1.1-pro",
+          "prompt": "Eye-catching social media graphic, modern SaaS product showcase, {product_name} dashboard screenshot mockup on laptop, clean desk setup, professional studio lighting, shallow depth of field, {brand_colors} color scheme",
+          "variables": {
+            "product_name": "AppName",
+            "brand_colors": "blue and white"
+          },
+          "aspect_ratio": "1:1",
+          "tags": [
+            "social",
+            "marketing"
+          ]
+        }
+      }
+    },
+    "landing": {
+      "name": "Web Design / Landing Pages",
+      "prompts": {
+        "hero_background": {
+          "description": "Full-width hero background for landing page",
+          "model": "flux-1.1-pro",
+          "prompt": "Abstract {style} background, smooth gradient from {color_1} to {color_2}, subtle geometric patterns, modern web design aesthetic, ultra wide composition, high resolution",
+          "variables": {
+            "style": "minimalist",
+            "color_1": "deep blue",
+            "color_2": "purple"
+          },
+          "aspect_ratio": "21:9",
+          "tags": [
+            "hero",
+            "background",
+            "abstract"
+          ]
+        },
+        "team_photo_style": {
+          "description": "Team/about section professional photos style guide",
+          "model": "flux-1.1-pro",
+          "prompt": "Professional portrait photo of a {role} person, {ethnicity}, modern office background, natural lighting, shallow depth of field, friendly confident expression, business casual attire, clean composition",
+          "variables": {
+            "role": "creative director",
+            "ethnicity": "diverse"
+          },
+          "aspect_ratio": "3:4",
+          "tags": [
+            "team",
+            "portrait"
+          ]
+        },
+        "testimonial_avatar": {
+          "description": "Client testimonial avatar placeholder",
+          "model": "flux-1.1-pro",
+          "prompt": "Professional headshot of a {gender} {age} business professional, {appearance}, neutral studio background, soft even lighting, warm friendly smile, high-end corporate photography style",
+          "variables": {
+            "gender": "female",
+            "age": "30s",
+            "appearance": "dark hair"
+          },
+          "aspect_ratio": "1:1",
+          "tags": [
+            "avatar",
+            "testimonial"
+          ]
+        },
+        "product_mockup": {
+          "description": "Device mockup for portfolio/showcase",
+          "model": "flux-1.1-pro",
+          "prompt": "Realistic {device} mockup displaying a modern {type} website, clean desk environment, {material} surface, soft shadows, professional product photography, 45 degree angle, 4k quality",
+          "variables": {
+            "device": "MacBook Pro",
+            "type": "ecommerce",
+            "material": "marble"
+          },
+          "aspect_ratio": "16:9",
+          "tags": [
+            "mockup",
+            "device",
+            "portfolio"
+          ]
+        }
+      }
+    },
+    "video_ai": {
+      "name": "AI Video / Image Production",
+      "prompts": {
+        "product_demo_video": {
+          "description": "Product demo intro video",
+          "model": "kling-2.0",
+          "type": "video",
+          "prompt": "Cinematic camera slowly zooming into a glowing laptop screen showing a modern SaaS dashboard, soft bokeh background with city lights, smooth dolly movement, professional color grading, 4K quality",
+          "duration": 5,
+          "tags": [
+            "video",
+            "demo",
+            "product"
+          ]
+        },
+        "social_reel": {
+          "description": "Short social media reel/story",
+          "model": "kling-2.0",
+          "type": "video",
+          "prompt": "Dynamic {action} scene, {subject}, energetic camera movement, trendy color grading, vertical format, fast-paced editing style, modern and eye-catching",
+          "variables": {
+            "action": "typing on keyboard",
+            "subject": "creative professional at desk"
+          },
+          "duration": 3,
+          "tags": [
+            "video",
+            "social",
+            "reel"
+          ]
+        },
+        "logo_animation": {
+          "description": "Logo reveal animation",
+          "model": "kling-2.0",
+          "type": "video",
+          "prompt": "Elegant logo reveal animation, {logo_description} materializing from particles, dark background, cinematic lighting, smooth motion, professional broadcast quality",
+          "variables": {
+            "logo_description": "minimalist geometric logo"
+          },
+          "duration": 3,
+          "tags": [
+            "video",
+            "logo",
+            "animation"
+          ]
+        },
+        "background_loop": {
+          "description": "Looping background video for website sections",
+          "model": "kling-2.0",
+          "type": "video",
+          "prompt": "Seamless looping abstract {visual}, slow smooth movement, {color_scheme} color palette, cinematic quality, subtle and non-distracting, perfect for website background",
+          "variables": {
+            "visual": "gradient liquid motion",
+            "color_scheme": "dark blue and purple"
+          },
+          "duration": 5,
+          "tags": [
+            "video",
+            "background",
+            "loop"
+          ]
+        },
+        "client_promo": {
+          "description": "Client project promotional video",
+          "model": "kling-2.0",
+          "type": "video",
+          "prompt": "Professional promotional video showing {product_type}, cinematic camera angles, smooth transitions, modern corporate style, ambient lighting, high production value",
+          "variables": {
+            "product_type": "mobile app on smartphone"
+          },
+          "duration": 5,
+          "tags": [
+            "video",
+            "promo",
+            "client"
+          ]
+        }
+      }
+    },
+    "bots": {
+      "name": "Bot Writing / Integration",
+      "prompts": {
+        "bot_avatar": {
+          "description": "Telegram/Discord bot avatar",
+          "model": "flux-1.1-pro",
+          "prompt": "Cute friendly robot mascot icon, {color} color scheme, modern flat design with subtle 3D effect, circular composition, clean edges perfect for avatar, {personality} expression",
+          "variables": {
+            "color": "blue",
+            "personality": "helpful and smart"
+          },
+          "aspect_ratio": "1:1",
+          "tags": [
+            "avatar",
+            "bot",
+            "mascot"
+          ]
+        },
+        "bot_onboarding_images": {
+          "description": "Bot onboarding step illustrations",
+          "model": "flux-1.1-pro",
+          "prompt": "Simple illustration of {step}: {description}, flat design, {brand_color} accent color, white background, minimal details, friendly tech style",
+          "variables": {
+            "step": "Step 1",
+            "description": "connect your account",
+            "brand_color": "blue"
+          },
+          "aspect_ratio": "16:9",
+          "tags": [
+            "bot",
+            "onboarding",
+            "illustration"
+          ]
+        },
+        "chatbot_banner": {
+          "description": "Banner image for chatbot landing page",
+          "model": "flux-1.1-pro",
+          "prompt": "Modern chat interface UI concept, floating message bubbles with AI assistant responses, clean gradient background {colors}, subtle tech particles, professional marketing image for AI chatbot service",
+          "variables": {
+            "colors": "blue to purple"
+          },
+          "aspect_ratio": "16:9",
+          "tags": [
+            "bot",
+            "banner",
+            "marketing"
+          ]
+        }
+      }
+    }
+  }
+}
